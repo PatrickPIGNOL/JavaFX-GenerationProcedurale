@@ -68,8 +68,8 @@ public class GameMap
 			this.aCells.add(vLine);
 		}		
 		List<MapCell> vActiveCells = new ArrayList<MapCell>();
-		double vY = this.aRandom.nextInt(this.aCells.size());
-		double vX = this.aRandom.nextInt(this.aCells.get((int)vY).size());
+		int vY = this.aRandom.nextInt(this.aCells.size());
+		int vX = this.aRandom.nextInt(this.aCells.get(vY).size());
 		this.aStartCell = this.aCells.get(vY).get(vX);
 		vActiveCells.add(this.aStartCell);
 		while(vActiveCells.size() < this.aCellsNumber)
@@ -81,11 +81,26 @@ public class GameMap
 			{
 				case 1:
 				{
-					vX = vCell.mX() - 1;
-					vY = vCell.mY();
-					if()
-					if(this.aCells.get())
-					vCell.mAddDoor(EDoors.Up);
+					vX = (int) (vCell.mX() - 1);
+					vY = (int) vCell.mY();
+					if
+					(
+						(vX >= 0) 
+						&& 
+						(vX < this.aCells.get(vY).size())
+					)
+					{
+						MapCell vAddCell = this.aCells.get(vY).get(vX);
+						if( ( vAddCell.mDoors() & EDoors.Down.mValue() ) != EDoors.Down.mValue() )
+						{
+							if(!vAddCell.mIsOpen())
+							{
+								vActiveCells.add(vAddCell);
+							}
+							vCell.mAddDoor(EDoors.Up);
+							vAddCell.mAddDoor(EDoors.Down);
+						}
+					}
 				}break;
 				case 2:
 				{

@@ -12,23 +12,19 @@ import javafx.scene.paint.Color;
 public class GameMap 
 {
 	private List<List<MapCell>> aCells = null;
+	//List<MapCell> vActiveCells = new ArrayList<MapCell>();
 	private int aLines = 6;
 	private int aColumns = 9;
-	private double aWidth = 40;
-	private double aHeight = 20;
-	private double aSpace = 2;
-	private int aCellsNumber = 20;
+	private double aWidth = 80;
+	private double aHeight = 40;
+	private double aSpace = 4;
+	private int aCellsNumber = 25;
 	private MapCell aStartCell;
 	private Random aRandom;
 	
 	public GameMap()
 	{
-		this.aRandom = new Random(System.nanoTime());
-	}
-	
-	public void mBuildCell(int pX, int pY)
-	{
-		
+		this.aRandom = new Random(System.nanoTime());		
 	}
 	
 	public void mKeyPress(KeyEvent e)
@@ -66,12 +62,14 @@ public class GameMap
 				vLine.add(new MapCell(vX, vY));
 			}
 			this.aCells.add(vLine);
-		}		
+		}
+		
 		List<MapCell> vActiveCells = new ArrayList<MapCell>();
 		int vY = this.aRandom.nextInt(this.aCells.size());
 		int vX = this.aRandom.nextInt(this.aCells.get(vY).size());
 		this.aStartCell = this.aCells.get(vY).get(vX);
 		vActiveCells.add(this.aStartCell);
+		
 		while(vActiveCells.size() < this.aCellsNumber)
 		{
 			int vRandom = this.aRandom.nextInt(vActiveCells.size());
@@ -82,7 +80,7 @@ public class GameMap
 				case 1:
 				{
 					vX = (int) (vCell.mX());
-					vY = (int) (vCell.mY() + 1);
+					vY = (int) (vCell.mY() - 1);
 					if
 					(
 						(vY > -1)
@@ -96,9 +94,9 @@ public class GameMap
 							if(!vAddCell.mIsOpen())
 							{
 								vActiveCells.add(vAddCell);
+								vAddCell.mAddDoor(EDoors.Down);
+								vCell.mAddDoor(EDoors.Up);
 							}
-							vAddCell.mAddDoor(EDoors.Down);
-							vCell.mAddDoor(EDoors.Up);
 						}
 					}
 				}break;
@@ -119,16 +117,16 @@ public class GameMap
 							if(!vAddCell.mIsOpen())
 							{
 								vActiveCells.add(vAddCell);
+								vAddCell.mAddDoor(EDoors.Left);
+								vCell.mAddDoor(EDoors.Right);
 							}
-							vAddCell.mAddDoor(EDoors.Left);
-							vCell.mAddDoor(EDoors.Right);
 						}
 					}
 				}break;
 				case 3:
 				{
 					vX = (int) (vCell.mX());
-					vY = (int) (vCell.mY() - 1);
+					vY = (int) (vCell.mY() + 1);
 					if
 					(
 						(vY > - 1)
@@ -142,9 +140,9 @@ public class GameMap
 							if(!vAddCell.mIsOpen())
 							{
 								vActiveCells.add(vAddCell);
+								vAddCell.mAddDoor(EDoors.Up);
+								vCell.mAddDoor(EDoors.Down);
 							}
-							vAddCell.mAddDoor(EDoors.Up);
-							vCell.mAddDoor(EDoors.Down);
 						}
 					}
 				}break;
@@ -165,9 +163,9 @@ public class GameMap
 							if(!vAddCell.mIsOpen())
 							{
 								vActiveCells.add(vAddCell);
-							}
-							vAddCell.mAddDoor(EDoors.Right);
-							vCell.mAddDoor(EDoors.Left);
+								vAddCell.mAddDoor(EDoors.Right);
+								vCell.mAddDoor(EDoors.Left);
+							}							
 						}
 					}
 				}break;
@@ -196,8 +194,25 @@ public class GameMap
 						pGraphicsContext.setFill(Color.rgb(16, 16, 16));
 					}				
 				}
-				pGraphicsContext.fillRect(vCell.mX() * this.aWidth + vCell.mX() * this.aSpace + this.aSpace, vCell.mY() * this.aHeight + vCell.mY() * this.aSpace + this.aSpace, this.aWidth, this.aHeight);
-				
+				pGraphicsContext.fillRoundRect(vCell.mX() * this.aWidth + vCell.mX() * this.aSpace + this.aSpace, vCell.mY() * this.aHeight + vCell.mY() * this.aSpace + this.aSpace, this.aWidth, this.aHeight, this.aWidth / 4, this.aHeight / 4 );				
+
+				pGraphicsContext.setFill(Color.rgb(128, 128, 128));
+				if((vCell.aDoors & EDoors.Up.mValue()) == EDoors.Up.mValue())
+				{
+					pGraphicsContext.fillRect(vCell.mX() * this.aWidth + vCell.mX() * this.aSpace + (this.aWidth / 2) + (this.aSpace / 2), vCell.mY() * this.aHeight + vCell.mY() * this.aSpace, this.aSpace, this.aSpace);
+				}
+				if((vCell.aDoors & EDoors.Right.mValue()) == EDoors.Right.mValue())
+				{
+					pGraphicsContext.fillRect(vCell.mX() * this.aWidth + vCell.mX() * this.aSpace + this.aWidth + this.aSpace, vCell.mY() * this.aHeight + vCell.mY() * this.aSpace + (this.aHeight / 2) /* (this.aSpace / 2)*/, this.aSpace, this.aSpace);
+				}
+				if((vCell.aDoors & EDoors.Down.mValue()) == EDoors.Down.mValue())
+				{
+					pGraphicsContext.fillRect(vCell.mX() * this.aWidth + vCell.mX() * this.aSpace + (this.aWidth / 2) + (this.aSpace / 2), vCell.mY() * this.aHeight + vCell.mY() * this.aSpace + this.aHeight + this.aSpace, this.aSpace, this.aSpace);
+				}
+				if((vCell.aDoors & EDoors.Left.mValue()) == EDoors.Left.mValue())
+				{
+					pGraphicsContext.fillRect(vCell.mX() * this.aWidth + vCell.mX() * this.aSpace, vCell.mY() * this.aHeight + vCell.mY() * this.aSpace + (this.aHeight / 2) /* (this.aSpace / 2)*/, this.aSpace, this.aSpace);
+				}
 				//pGraphicsContext.setStroke(Color.RED);
 				//pGraphicsContext.strokeRect(vCell.mX() * this.aWidth + vCell.mX() * this.aSpace + this.aSpace, vCell.mY() * this.aHeight + vCell.mY() * this.aSpace + this.aSpace, this.aWidth, this.aHeight);
 			}

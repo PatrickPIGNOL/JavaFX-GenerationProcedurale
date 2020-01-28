@@ -12,19 +12,20 @@ import javafx.scene.paint.Color;
 public class GameMap 
 {
 	private List<List<MapCell>> aCells = null;
-	//List<MapCell> vActiveCells = new ArrayList<MapCell>();
 	private int aLines = 6;
 	private int aColumns = 9;
-	private double aWidth = 80;
-	private double aHeight = 40;
+	private double aWidth = 40;
+	private double aHeight = 20;
 	private double aSpace = 4;
 	private int aCellsNumber = 25;
 	private MapCell aStartCell;
 	private Random aRandom;
+	private EShape aShape;
 	
 	public GameMap()
 	{
-		this.aRandom = new Random(System.nanoTime());		
+		this.aRandom = new Random(System.nanoTime());
+		this.aShape = EShape.RoundRectangle;
 	}
 	
 	public void mKeyPress(KeyEvent e)
@@ -37,7 +38,22 @@ public class GameMap
 		if(e.getCode() == KeyCode.SPACE)
 		{
 			this.mBuidDungeon();
-		}
+			switch(this.aShape)
+			{
+				case Rectangle:
+				{
+					this.aShape = EShape.RoundRectangle;
+				}break;
+				case RoundRectangle:
+				{
+					this.aShape = EShape.Oval;
+				}break;
+				case Oval:
+				{
+					this.aShape = EShape.Rectangle;
+				}break;
+			}
+		}		
 	}
 	
 	public void mBuidDungeon()
@@ -194,27 +210,40 @@ public class GameMap
 						pGraphicsContext.setFill(Color.rgb(16, 16, 16));
 					}				
 				}
-				pGraphicsContext.fillRoundRect(vCell.mX() * this.aWidth + vCell.mX() * this.aSpace + this.aSpace, vCell.mY() * this.aHeight + vCell.mY() * this.aSpace + this.aSpace, this.aWidth, this.aHeight, this.aWidth / 4, this.aHeight / 4 );				
+				switch(this.aShape)
+				{
+					case Rectangle:
+					{
+						pGraphicsContext.fillRect(vCell.mX() * this.aWidth + vCell.mX() * this.aSpace + this.aSpace, vCell.mY() * this.aHeight + vCell.mY() * this.aSpace + this.aSpace, this.aWidth, this.aHeight);//, this.aWidth / 4, this.aHeight / 4 );
+					}break;
+					case RoundRectangle:
+					{
+						pGraphicsContext.fillRoundRect(vCell.mX() * this.aWidth + vCell.mX() * this.aSpace + this.aSpace, vCell.mY() * this.aHeight + vCell.mY() * this.aSpace + this.aSpace, this.aWidth, this.aHeight, this.aWidth / 4, this.aHeight / 4 );
+					}break;
+					case Oval:
+					{
+						pGraphicsContext.fillOval(vCell.mX() * this.aWidth + vCell.mX() * this.aSpace + this.aSpace, vCell.mY() * this.aHeight + vCell.mY() * this.aSpace + this.aSpace, this.aWidth, this.aHeight);//, this.aWidth / 4, this.aHeight / 4 );
+					}break;
+				}
+								
 
 				pGraphicsContext.setFill(Color.rgb(128, 128, 128));
 				if((vCell.aDoors & EDoors.Up.mValue()) == EDoors.Up.mValue())
 				{
-					pGraphicsContext.fillRect(vCell.mX() * this.aWidth + vCell.mX() * this.aSpace + (this.aWidth / 2) + (this.aSpace / 2), vCell.mY() * this.aHeight + vCell.mY() * this.aSpace, this.aSpace, this.aSpace);
+					pGraphicsContext.fillRect(vCell.mX() * this.aWidth + vCell.mX() * this.aSpace + (this.aWidth / 2) + (this.aSpace / 2), vCell.mY() * this.aHeight + vCell.mY() * this.aSpace + 1, this.aSpace, this.aSpace);
 				}
 				if((vCell.aDoors & EDoors.Right.mValue()) == EDoors.Right.mValue())
 				{
-					pGraphicsContext.fillRect(vCell.mX() * this.aWidth + vCell.mX() * this.aSpace + this.aWidth + this.aSpace, vCell.mY() * this.aHeight + vCell.mY() * this.aSpace + (this.aHeight / 2) /* (this.aSpace / 2)*/, this.aSpace, this.aSpace);
+					pGraphicsContext.fillRect(vCell.mX() * this.aWidth + vCell.mX() * this.aSpace + this.aWidth + this.aSpace - 1, vCell.mY() * this.aHeight + vCell.mY() * this.aSpace + (this.aHeight / 2) + (this.aSpace / 2), this.aSpace, this.aSpace);
 				}
 				if((vCell.aDoors & EDoors.Down.mValue()) == EDoors.Down.mValue())
 				{
-					pGraphicsContext.fillRect(vCell.mX() * this.aWidth + vCell.mX() * this.aSpace + (this.aWidth / 2) + (this.aSpace / 2), vCell.mY() * this.aHeight + vCell.mY() * this.aSpace + this.aHeight + this.aSpace, this.aSpace, this.aSpace);
+					pGraphicsContext.fillRect(vCell.mX() * this.aWidth + vCell.mX() * this.aSpace + (this.aWidth / 2) + (this.aSpace / 2), vCell.mY() * this.aHeight + vCell.mY() * this.aSpace + this.aHeight + this.aSpace-1, this.aSpace, this.aSpace);
 				}
 				if((vCell.aDoors & EDoors.Left.mValue()) == EDoors.Left.mValue())
 				{
-					pGraphicsContext.fillRect(vCell.mX() * this.aWidth + vCell.mX() * this.aSpace, vCell.mY() * this.aHeight + vCell.mY() * this.aSpace + (this.aHeight / 2) /* (this.aSpace / 2)*/, this.aSpace, this.aSpace);
+					pGraphicsContext.fillRect(vCell.mX() * this.aWidth + vCell.mX() * this.aSpace + 1, vCell.mY() * this.aHeight + vCell.mY() * this.aSpace + (this.aHeight / 2) + (this.aSpace/2), this.aSpace, this.aSpace);
 				}
-				//pGraphicsContext.setStroke(Color.RED);
-				//pGraphicsContext.strokeRect(vCell.mX() * this.aWidth + vCell.mX() * this.aSpace + this.aSpace, vCell.mY() * this.aHeight + vCell.mY() * this.aSpace + this.aSpace, this.aWidth, this.aHeight);
 			}
 		}
 	}

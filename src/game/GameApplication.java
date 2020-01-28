@@ -130,7 +130,7 @@ public class GameApplication extends Application
 	
 	public void mLoad()
 	{
-	    this.aStage.setTitle("JavaFX : Binding of Isaac");	  
+	    this.aStage.setTitle("JavaFX : Binding of Isaac (Dungeon générator)");	  
 		this.aGameMap = new GameMap();
 	}
 	

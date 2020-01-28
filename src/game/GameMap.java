@@ -81,41 +81,97 @@ public class GameMap
 			{
 				case 1:
 				{
-					vX = (int) (vCell.mX() - 1);
-					vY = (int) vCell.mY();
+					vX = (int) (vCell.mX());
+					vY = (int) (vCell.mY() + 1);
 					if
 					(
-						(vX >= 0) 
+						(vY > -1)
 						&& 
-						(vX < this.aCells.get(vY).size())
+						(vY < this.aCells.size())
 					)
 					{
 						MapCell vAddCell = this.aCells.get(vY).get(vX);
-						if( ( vAddCell.mDoors() & EDoors.Down.mValue() ) != EDoors.Down.mValue() )
+						if( ( vCell.mDoors() & EDoors.Up.mValue() ) != EDoors.Up.mValue() )
 						{
 							if(!vAddCell.mIsOpen())
 							{
 								vActiveCells.add(vAddCell);
 							}
-							vCell.mAddDoor(EDoors.Up);
 							vAddCell.mAddDoor(EDoors.Down);
+							vCell.mAddDoor(EDoors.Up);
 						}
 					}
 				}break;
 				case 2:
 				{
-					vCell.mAddDoor(EDoors.Right);
+					vX = (int) (vCell.mX() + 1);
+					vY = (int) (vCell.mY());
+					if
+					(
+						(vX > -1)
+						&& 
+						(vX < this.aCells.get(vY).size())
+					)
+					{
+						MapCell vAddCell = this.aCells.get(vY).get(vX);
+						if( ( vCell.mDoors() & EDoors.Right.mValue() ) != EDoors.Right.mValue() )
+						{
+							if(!vAddCell.mIsOpen())
+							{
+								vActiveCells.add(vAddCell);
+							}
+							vAddCell.mAddDoor(EDoors.Left);
+							vCell.mAddDoor(EDoors.Right);
+						}
+					}
 				}break;
 				case 3:
 				{
-					vCell.mAddDoor(EDoors.Down);
+					vX = (int) (vCell.mX());
+					vY = (int) (vCell.mY() - 1);
+					if
+					(
+						(vY > - 1)
+						&& 
+						(vY < this.aCells.size())
+					)
+					{
+						MapCell vAddCell = this.aCells.get(vY).get(vX);
+						if( ( vCell.mDoors() & EDoors.Down.mValue() ) != EDoors.Down.mValue() )
+						{
+							if(!vAddCell.mIsOpen())
+							{
+								vActiveCells.add(vAddCell);
+							}
+							vAddCell.mAddDoor(EDoors.Up);
+							vCell.mAddDoor(EDoors.Down);
+						}
+					}
 				}break;
 				case 4:
 				{
-					vCell.mAddDoor(EDoors.Left);
+					vX = (int) (vCell.mX() - 1);
+					vY = (int) (vCell.mY());
+					if
+					(
+						(vX > - 1)
+						&& 
+						(vX < this.aCells.get(vY).size())
+					)
+					{
+						MapCell vAddCell = this.aCells.get(vY).get(vX);
+						if( ( vAddCell.mDoors() & EDoors.Left.mValue() ) != EDoors.Left.mValue() )
+						{
+							if(!vAddCell.mIsOpen())
+							{
+								vActiveCells.add(vAddCell);
+							}
+							vAddCell.mAddDoor(EDoors.Right);
+							vCell.mAddDoor(EDoors.Left);
+						}
+					}
 				}break;
 			}
-			
 		}				
 	}
 	
@@ -133,11 +189,11 @@ public class GameMap
 				{
 					if(vCell.mIsOpen())
 					{
-						pGraphicsContext.setFill(Color.LIGHTGREY);
+						pGraphicsContext.setFill(Color.rgb(128, 128, 128));
 					}
 					else
 					{
-						pGraphicsContext.setFill(Color.DARKGREY);
+						pGraphicsContext.setFill(Color.rgb(16, 16, 16));
 					}				
 				}
 				pGraphicsContext.fillRect(vCell.mX() * this.aWidth + vCell.mX() * this.aSpace + this.aSpace, vCell.mY() * this.aHeight + vCell.mY() * this.aSpace + this.aSpace, this.aWidth, this.aHeight);
